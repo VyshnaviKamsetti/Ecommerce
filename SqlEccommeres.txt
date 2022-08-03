@@ -1,0 +1,128 @@
+
+create database Bhavnacorp
+
+use Bhavnacorp
+
+--Ecommerce Tables---
+---Products---
+---Customer----
+---Order----
+---Accounts----
+
+create table ProductDetails(ProductId int primary key,ProductName nvarchar(30),ProductType nvarchar(20),ProductQuantity int)
+
+---------Inserting the values into ProductDetails-------
+
+insert into ProductDetails values(1,'Pen','Stationary',30)
+insert into ProductDetails values(2,'White-Book','Stationary',40)
+insert into ProductDetails values(3,'Sarees','Clothing',100)
+insert into ProductDetails values(4,'Shirts','Clothing',300)
+insert into ProductDetails values(5,'Tops','Clothing',300)
+insert into ProductDetails values(6,'Curten','Home-Decor',150)
+insert into ProductDetails values(7,'Door-Mat','Home-Decor',200)
+insert into ProductDetails values(8,'Mixer','Kitchen',30)
+insert into ProductDetails values(9,'Stove','Kitchen',20)
+insert into ProductDetails values(10,'Dinner-Set','Kitchen',20)
+insert into ProductDetails values(11,'Mobile','Gadgets',0)
+
+update ProductDetails set ProductQuantity=null where ProductId=11
+
+select * from ProductDetails
+
+------ORDER DETAILS-----
+
+Create table OrderDetails(OrderNumber int Foreign key REFERENCES ProductDetails(ProductId),FromAdress nvarchar(100),OrderDate datetime,ToAdress nvarchar(100))
+
+---------Inserting the values into ProductDetails-------
+
+
+alter table OrderDetails add OrderId int primary key
+alter table OrderDetails add OrderQuantity int
+insert into OrderDetails values(1,'Gujarat','12/4/2022','Ananthapur',355,3)
+insert into OrderDetails values(2,'Kanpur','10/8/2021','Ananthapur',372,1)
+insert into OrderDetails values(3,'Hyderabad','12/4/2022','Hyderabad',369,2)
+insert into OrderDetails values(4,'Solapur','12/6/2020','Kalyanadurgam',411,1)
+insert into OrderDetails values(5,'Gujarat','12/4/2021','Ananthapur',467,1)
+
+Update OrderDetails set OrderQuantity=2 , OrderId=121 where OrderNumber =1
+Update OrderDetails set ToAdress='Rayadurgam' where OrderId=467
+
+select * from OrderDetails
+
+drop table OrderDetails
+---------AccountDetails------
+
+
+Create Table AccountDetails(AccountId int primary key identity(201,1),UserName nvarchar(50),Password nvarchar(20),YourOrders nvarchar(20),
+YourAddress nvarchar(200))
+
+alter table AccountDetails add ProductId int Foreign key REFERENCES ProductDetails(ProductId)
+
+---------Inserting the values into AccountDetails-------
+
+Insert into AccountDetails values('Mohit','Mohit@1234','Pen','Ananthapur',1)
+Insert into AccountDetails values('Mohini','Mohinik@4','Sarees','Hyderabad',3)
+Insert into AccountDetails values('Rohith','{kjji12@34','Shirts','Kalyanadurgam',4)
+Insert into AccountDetails values('Mohit','Mohit@1234','Pen','Ananthapur',1)
+Insert into AccountDetails values('Rohith','{kjji12@34','Shirts','Kalyanadurgam',4)
+Insert into AccountDetails values('Mohit','Mohit@1234','Pen','Ananthapur',1)
+
+select * from AccountDetails
+------CustomerDetails-------
+Create Table CustomerDetails(CustomerId int primary key,CustomerName nvarchar(50),PreviousOrderQuantity nvarchar(20),CustomerPhoneNumber numeric(10),Bill money,OrdersInfoNumber int Foreign key REFERENCES ProductDetails(ProductId) )
+
+drop table CustomerDetails
+
+select * from CustomerDetails
+
+---------Inserting the values into CustomerDetails-------
+
+insert into CustomerDetails values(1000,'Mohit',2,58789876,120,1)
+insert into CustomerDetails values(1001,'Mohini',2,5878987645,1245,3)
+insert into CustomerDetails values(1002,'Rohith',3,58999976,700,4)
+insert into CustomerDetails values(1003,'Mohit',1,5800076,120,1)
+
+-----Operations-----
+
+select * from ProductDetails 
+
+-----BETWEEN-------
+
+select * from ProductDetails where ProductQuantity BETWEEN 30 and 100
+
+-----IN and NOT IN------
+
+select * from AccountDetails where YourAddress in('Hyderabad','Ananthapur') and YourOrders in ('Pen')
+select * from AccountDetails where YourAddress Not in ('Hyderabad','Ananthapur') and YourOrders Not in ('Pen')
+-----Like-----
+
+select UserName  from AccountDetails where UserName like 'm%' 
+
+select * from ProductDetails where  ProductName like '%H%'
+-----NotLike------
+select UserName from AccountDetails where YourAddress Not Like '%An%'
+
+select * from ProductDetails where  ProductName Not like '%H%'
+
+----WildCard-----
+select * from CustomerDetails where CustomerName like '%[oht]'
+
+select * from ProductDetails where  ProductName like 'S[ra]%'
+
+----Exist-----
+
+Select UserName from AccountDetails where EXISTS(select * from CustomerDetails )
+
+-----ISNULL-----
+select * from ProductDetails where ProductQuantity IS Null
+
+
+---Union-----
+
+select UserName from AccountDetails UNION select CustomerName from  CustomerDetails
+--intersect---
+
+select * from AccountDetails  
+intersect
+select * from  CustomerDetails
+
